@@ -8,10 +8,10 @@ namespace API.Inventory.CORE.Entities
 {
     public class UserRole
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int USER_ROLE_ID { get; set; }
+        public int USER_INVENTORY_ID { get; set; }
+        public int ROLE_INVENTORY_ID { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }

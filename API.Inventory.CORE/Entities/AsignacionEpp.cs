@@ -8,14 +8,14 @@ namespace API.Inventory.CORE.Entities
 {
     public class AsignacionEpp
     {
-        public int Id { get; set; }
-        public int EmpleadoId { get; set; }
-        public int EppId { get; set; }
-        public DateTime FechaAsignacion { get; set; }
-        public DateTime FechaDevolucion { get; set; }
-        public bool Estado { get; set; }
-        public string Observacion { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int ASIGNACION_EPP_ID { get; set; }
+        public int EMPLEADO_ID { get; set; }
+        public int EPP_ID { get; set; }
+        public DateTime FECH_ASIGNACION { get; set; }
+        public DateTime FECH_DEVOLUCION { get; set; }
+        public bool ESTADO_EPP { get; set; }
+        public string COMENTARIO { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }

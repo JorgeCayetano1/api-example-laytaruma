@@ -1,5 +1,6 @@
 ﻿using API.Inventory.CORE.Repositories.Connection;
 using Microsoft.Data.SqlClient;
+using System.Data.Common;
 
 namespace API.Inventory.API.Middlewares
 {
@@ -27,9 +28,9 @@ namespace API.Inventory.API.Middlewares
                 var sqlConnectionCore = sp.GetRequiredService<SqlConnectionCore>();
                 return sqlConnectionCore.GetOpenConnectionAsync().GetAwaiter().GetResult();
             });
-            services.AddScoped<SqlTransaction>(sp =>
+            services.AddScoped<DbTransaction>( sp =>
             {
-                var connection = sp.GetRequiredService<SqlConnection>();
+                var connection = sp.GetRequiredService<SqlConnectionCore>();
                 return connection.BeginTransaction();
             });
             return services;

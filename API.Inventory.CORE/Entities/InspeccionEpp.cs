@@ -8,13 +8,13 @@ namespace API.Inventory.CORE.Entities
 {
     public class InspeccionEpp
     {
-        public int Id { get; set; }
-        public int AsignacionEppId { get; set; }
-        public DateTime FechaInspeccion { get; set; }
-        public string Observacion { get; set; }
-        public bool Estado { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int INSPECCION_EPP_ID { get; set; }
+        public int ASIGNACION_EPP_ID { get; set; }
+        public DateTime FECH_INSPECCION { get; set; }
+        public string RESULTADO { get; set; }
+        public string OBSERVACIONES { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
 
     }
 }

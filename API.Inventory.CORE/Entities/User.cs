@@ -8,11 +8,11 @@ namespace API.Inventory.CORE.Entities
 {
     public class User
     {
-        public int UserId { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int USER_INVENTORY_ID { get; set; }
+        public string USER_NAME { get; set; }
+        public string USER_EMAIL { get; set; }
+        public string USER_PASSWORD { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }

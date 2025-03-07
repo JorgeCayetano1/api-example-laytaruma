@@ -8,12 +8,12 @@ namespace API.Inventory.CORE.Entities
 {
     public class Empleado
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Cargo { get; set; }
-        public bool estado { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int EMPLEADO_ID { get; set; }
+        public string NOMBRE { get; set; }
+        public string APELLIDO { get; set; }
+        public string CARGO { get; set; }
+        public bool ESTADO { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }

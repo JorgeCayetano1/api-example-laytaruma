@@ -8,9 +8,9 @@ namespace API.Inventory.CORE.Entities
 {
     public class Role
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int ROLE_INVENTORY_ID { get; set; }
+        public string ROLE_NAME { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }

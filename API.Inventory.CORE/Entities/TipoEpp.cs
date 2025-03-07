@@ -8,10 +8,9 @@ namespace API.Inventory.CORE.Entities
 {
     public class TipoEpp
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public DateTime FechaEntrega { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int TIPO_EPP_ID { get; set; }
+        public string NOMBRE { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }

@@ -8,10 +8,10 @@ namespace API.Inventory.CORE.Entities
 {
     public class Sede
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Ubicacion { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int SEDE_ID { get; set; }
+        public string NOMBRE { get; set; }
+        public string UBICACION { get; set; }
+        public DateTime CREATED_BY { get; set; }
+        public DateTime UPDATED_BY { get; set; }
     }
 }
