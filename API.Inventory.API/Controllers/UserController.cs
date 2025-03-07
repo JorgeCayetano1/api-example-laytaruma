@@ -23,7 +23,7 @@ namespace API.Inventory.API.Controllers
             var response = await _unitOfWork.UserRepository.GetAllUsers();
             if (response.success)
             {
-                return Ok(response.result);
+                return Ok(response);
             }
             return BadRequest(response);
         }
