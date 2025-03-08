@@ -1,4 +1,5 @@
 using API.Inventory.API.Middlewares;
+using API.Inventory.CORE.Helpers;
 using API.Inventory.CORE.Repositories.Connection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,19 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// add sql connection
-//builder.Services.AddSingleton<SqlConnectionCore>(sp =>
-//{
-//    var configuration = sp.GetRequiredService<IConfiguration>();
-//    var connectionString = configuration.GetConnectionString("DefaultConnection");
-//    if (string.IsNullOrWhiteSpace(connectionString))
-//    {
-//        throw new InvalidOperationException("Connection string is missing");
-//    }
-//    return new SqlConnectionCore(connectionString);
-//});
 DIExtensions.AddDependencyInjection(builder.Services);
 SqlConnectionCoreExtensions.AddSqlConnectionCore(builder.Services, builder.Configuration.GetConnectionString("InventoryConnection"));
+builder.Services.AddAutoMapper(typeof(MapeoGenerico));
 
 var app = builder.Build();
 

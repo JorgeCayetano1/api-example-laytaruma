@@ -2,95 +2,63 @@
 using API.Inventory.CORE.Repositories.Connection;
 using API.Inventory.CORE.Repositories.Interface;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using API.Inventory.CORE.Models.DTO;
 using Common.Core.Services;
 using API.Inventory.CORE.Entities;
 
 namespace API.Inventory.CORE.Repositories.Implementation
 {
-    public class UserRepository : Repository, IUserRepository
+    public class UserRepository : IUserRepository
     {
-        private readonly SqlConnection _context;
-        private readonly SqlTransaction _transaction;
-
-        public UserRepository(SqlConnection context, SqlTransaction transaction) : base(context, transaction)
+       
+        private readonly IDbContext _dbContext;
+        
+        public UserRepository(IDbContext dbContext)
         {
-            _context = context;
-            _transaction = transaction;
+            _dbContext = dbContext;
         }
-
+        
         public async Task<ResponseModel> GetAllUsers()
         {
-            ResponseModel response = new ResponseModel();
-            List<UserDto> users = new List<UserDto>();
-
-            using (var command = CreateCommand())
-            {
-                command.CommandText = @"SELECT 
-                                           [USER_INVENTORY_ID]
-                                          ,[USER_NAME]
-                                          ,[USER_EMAIL]
-                                          ,[USER_PASSWORD]
-                                          ,[CREATED_BY]
-                                          ,[UPDATED_BY]
-                                      FROM [BDINTEGRA].[Inventory].[USER_INVENTORY];";
-                command.CommandType = CommandType.Text; // Cambiado a CommandType.Text
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-
-                    ReflectionService.ReaderToList<User>(reader);
-                }
-            }
-
+            var response = new ResponseModel();
+            var sql = @"SELECT 
+                           [USER_INVENTORY_ID]
+                          ,[USER_NAME]
+                          ,[USER_EMAIL]
+                          ,[USER_PASSWORD]
+                          ,[CREATED_BY]
+                          ,[UPDATED_BY]
+                      FROM [BDINTEGRA].[Inventory].[USER_INVENTORY];";
+            
+            var dataTable = await _dbContext.QueryAsync(sql);
+            var users = dataTable.TableToList<User>();
+            
             response.success = true;
             response.result = users;
             return response;
         }
-
+        
         public async Task<ResponseModel> GetUser(int userId)
         {
-            ResponseModel response = new ResponseModel();
-            UserDto user = null;
-
-            using (var command = CreateCommand())
+            var response = new ResponseModel();
+            var sql = @"SELECT 
+                           [USER_INVENTORY_ID]
+                          ,[USER_NAME]
+                          ,[USER_EMAIL]
+                          ,[USER_PASSWORD]
+                          ,[CREATED_BY]
+                          ,[UPDATED_BY]
+                      FROM [BDINTEGRA].[Inventory].[USER_INVENTORY]
+                      WHERE [USER_INVENTORY_ID] = @UserId;";
+            
+            var parameters = new[]
             {
-                command.CommandText = @"SELECT 
-                                           [USER_INVENTORY_ID]
-                                          ,[USER_NAME]
-                                          ,[USER_EMAIL]
-                                          ,[USER_PASSWORD]
-                                          ,[CREATED_BY]
-                                          ,[UPDATED_BY]
-                                      FROM [BDINTEGRA].[Inventory].[USER_INVENTORY]
-                                      WHERE [USER_NAME] = @UserId;";
-                command.CommandType = CommandType.Text;
-                command.Parameters.AddWithValue("@UserId", userId);
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    //if (await reader.ReadAsync())
-                    //{
-                    //    user = new UserDto
-                    //    {
-                    //        UserId = reader.GetInt32(0),
-                    //        Nombre = reader.GetString(1),
-                    //        Password = reader.GetString(2),
-                    //        CreatedAt = reader.GetDateTime(3),
-                    //        UpdatedAt = reader.GetDateTime(4)
-                    //    };
-                    //}
-
-                    ReflectionService.ReaderToList<User>(reader);
-                }
-            }
-
+                new SqlParameter("@UserId", userId)
+            };
+            
+            var dataTable = await _dbContext.QueryAsync(sql, parameters);
+            var user = dataTable.TableToList<User>().FirstOrDefault();
+            
             if (user != null)
             {
                 response.success = true;
@@ -101,126 +69,67 @@ namespace API.Inventory.CORE.Repositories.Implementation
                 response.success = false;
                 response.errorMessage = "User not found";
             }
-
+            
             return response;
         }
-
-        public async Task<ResponseModel> CreateUser(UserDto user)
+        
+        public async Task<ResponseModel> CreateUser(User user)
         {
-            //try
-            //{
-            //    ResponseModel response = new ResponseModel();
-            //    using (var command = CreateCommand())
-            //    {
-            //        command.CommandText = "[Inventory].[sp_CrearUsuario]";
-            //        command.CommandType = CommandType.StoredProcedure;
-            //        //SqlParameter param;
-            //        //param = command.Parameters.Add("@USER_NAME", SqlDbType.VarChar);
-            //        //param.Value = user.Nombre;
-            //        //command.Parameters.Add("@USER_EMAIL", SqlDbType.VarChar);
-            //        //param.Value = user.Email;
-            //        //command.Parameters.Add("@USER_PASSWORD", SqlDbType.VarChar);
-            //        //param.Value = user.Password;
-            //        //command.Parameters.Add("@CREATED_BY", SqlDbType.DateTime);
-            //        //param.Value = DateTime.Now;
-            //        //command.Parameters.Add("@UPDATED_BY", SqlDbType.DateTime);
-            //        //param.Value = DateTime.Now;
-
-            //        command.Parameters.AddWithValue("@USER_NAME", user.Nombre);
-            //        command.Parameters.AddWithValue("@USER_EMAIL", user.Email);
-            //        command.Parameters.AddWithValue("@USER_PASSWORD", user.Password);
-            //        command.Parameters.AddWithValue("@CREATED_BY", DateTime.Now);
-            //        command.Parameters.AddWithValue("@UPDATED_BY", DateTime.Now);
-
-
-            //        // Imprimir el comando SQL y sus parámetros
-            //        //Console.WriteLine("SQL Command: " + command.CommandText);
-            //        //foreach (SqlParameter param in command.Parameters)
-            //        //{
-            //        //    Console.WriteLine($"{param.ParameterName}: {param.Value}");
-            //        //}
-
-            //        var rowsAffected = await command.ExecuteNonQueryAsync();
-            //        if (rowsAffected <= 0)
-            //        {
-            //            response.success = false;
-            //            response.errorMessage = "User not created";
-            //            return response;
-            //        }
-
-            //        response.success = true;
-            //        response.successMessage = "User created successfully";
-
-
-            //        return response;
-            //    }
-            //}
-            //catch (Exception ex) 
-            //{
-            //    ResponseModel response = new ResponseModel();
-            //    response.success = false;
-            //    response.errorMessage = ex.Message;
-            //    return response;
-            //}
-
-            try
+            var response = new ResponseModel();
+            var sql = "[Inventory].[sp_CrearUsuario]";
+            
+            var parameters = new[]
             {
-                ResponseModel response = new ResponseModel();
-                using (var command = CreateCommand())
-                {
-                    command.CommandText = "[Inventory].[sp_CrearUsuario]";
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@USER_NAME", user.Nombre);
-                    command.Parameters.AddWithValue("@USER_EMAIL", user.Email);
-                    command.Parameters.AddWithValue("@USER_PASSWORD", user.Password);
-                    command.Parameters.AddWithValue("@CREATED_BY", DateTime.Now);
-                    command.Parameters.AddWithValue("@UPDATED_BY", DateTime.Now);
-
-                    // Imprimir el comando SQL y sus parámetros para depuración
-                    Console.WriteLine("SQL Command: " + command.CommandText);
-                    foreach (SqlParameter param in command.Parameters)
-                    {
-                        Console.WriteLine($"{param.ParameterName}: {param.Value}");
-                    }
-
-                    //var rowsAffected = await command.ExecuteNonQueryAsync();
-                    //if (rowsAffected <= 0)
-                    //{
-                    //    response.success = false;
-                    //    response.errorMessage = "User not created";
-                    //    return response;
-                    //}
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    response.success = true;
-                    response.successMessage = "User created successfully";
-                    return response;
-                }
-            }
-            catch (SqlException sqlEx)
+                new SqlParameter("@USER_NAME", user.USER_NAME),
+                new SqlParameter("@USER_EMAIL", user.USER_EMAIL),
+                new SqlParameter("@USER_PASSWORD", user.USER_PASSWORD),
+                new SqlParameter("@CREATED_BY", DateTime.Now),
+                new SqlParameter("@UPDATED_BY", DateTime.Now)
+            };
+            
+            var rowsAffected = await _dbContext.ExecuteAsync(sql, parameters);
+            
+            if (rowsAffected == 0)
             {
-                // Manejo específico de errores SQL
-                ResponseModel response = new ResponseModel();
                 response.success = false;
-                response.errorMessage = $"SQL Error: {sqlEx.Message}";
+                response.errorMessage = "User not created";
                 return response;
             }
-            catch (Exception ex)
+            
+            response.success = true;
+            response.successMessage = "User created successfully";
+            
+            return response;
+        }
+        
+        public async Task<ResponseModel> UpdateUser(User user)
+        {
+            var response = new ResponseModel();
+            var sql = "[Inventory].[sp_ActualizarUsuario]";
+            
+            var parameters = new[]
             {
-                // Manejo general de errores
-                ResponseModel response = new ResponseModel();
+                new SqlParameter("@USER_INVENTORY_ID", user.USER_INVENTORY_ID),
+                new SqlParameter("@USER_NAME", user.USER_NAME),
+                new SqlParameter("@USER_EMAIL", user.USER_EMAIL),
+                new SqlParameter("@USER_PASSWORD", user.USER_PASSWORD),
+                new SqlParameter("@UPDATED_BY", DateTime.Now)
+            };
+            
+            var rowsAffected = await _dbContext.ExecuteAsync(sql, parameters);
+            if (rowsAffected == 0)
+            {
                 response.success = false;
-                response.errorMessage = ex.Message;
+                response.errorMessage = "User not updated";
                 return response;
             }
+            
+            response.success = true;
+            response.successMessage = "User updated successfully";
+            
+            return response;
         }
-
-        public Task<ResponseModel> UpdateUser(UserDto user)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Task<ResponseModel> DeleteUser(int userId)
         {
             throw new NotImplementedException();

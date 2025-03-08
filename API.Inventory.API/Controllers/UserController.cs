@@ -1,6 +1,7 @@
 ﻿using API.Inventory.CORE;
 using API.Inventory.CORE.Models.DTO;
 using API.Inventory.CORE.Repositories.Interface;
+using API.Inventory.CORE.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +11,17 @@ namespace API.Inventory.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        //private readonly IUserRepository _userRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserService _userService;
 
-        public UserController(IUnitOfWork unitOfWork)
+        public UserController(IUserService userService)
         {
-            _unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var response = await _unitOfWork.UserRepository.GetAllUsers();
+            var response = await _userService.GetAllUsers();
             if (response.success)
             {
                 return Ok(response);
@@ -33,7 +33,7 @@ namespace API.Inventory.API.Controllers
         [Route("{userId:int}")]
         public async Task<IActionResult> GetUser(int userId)
         {
-            var response = await _unitOfWork.UserRepository.GetUser(userId);
+            var response = await _userService.GetUserById(userId);
             if (response.success)
             {
                 return Ok(response);
@@ -44,7 +44,18 @@ namespace API.Inventory.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserDto user)
         {
-            var response = await _unitOfWork.UserRepository.CreateUser(user);
+            var response = await _userService.CreateUser(user);
+            if (response.success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+        
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UserDto user)
+        {
+            var response = await _userService.UpdateUser(user);
             if (response.success)
             {
                 return Ok(response);

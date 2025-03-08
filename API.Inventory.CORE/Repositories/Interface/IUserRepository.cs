@@ -1,10 +1,6 @@
-﻿using API.Inventory.CORE.Models;
+﻿using API.Inventory.CORE.Entities;
+using API.Inventory.CORE.Models;
 using API.Inventory.CORE.Models.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Inventory.CORE.Repositories.Interface
 {
@@ -12,8 +8,8 @@ namespace API.Inventory.CORE.Repositories.Interface
     {
         Task<ResponseModel> GetAllUsers();
         Task<ResponseModel> GetUser(int userId);
-        Task<ResponseModel> CreateUser(UserDto user);
-        Task<ResponseModel> UpdateUser(UserDto user);
+        Task<ResponseModel> CreateUser(User user);
+        Task<ResponseModel> UpdateUser(User user);
         Task<ResponseModel> DeleteUser(int userId);
 
     }

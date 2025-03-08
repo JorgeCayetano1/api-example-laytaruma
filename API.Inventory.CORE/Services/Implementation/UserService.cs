@@ -1,25 +1,42 @@
-﻿using API.Inventory.CORE.Models;
+﻿using API.Inventory.CORE.Entities;
+using API.Inventory.CORE.Models;
 using API.Inventory.CORE.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using API.Inventory.CORE.Models.DTO;
+using AutoMapper;
 
 namespace API.Inventory.CORE.Services.Implementation
 {
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<ResponseModel> GetAllUsers()
         {
             return await _unitOfWork.UserRepository.GetAllUsers();
+        }
+        
+        public async Task<ResponseModel> GetUserById(int userId)
+        {
+            return await _unitOfWork.UserRepository.GetUser(userId);
+        }
+        
+        public async Task<ResponseModel> CreateUser(UserDto user)
+        {
+            var userEntity = _mapper.Map<User>(user);
+            return await _unitOfWork.UserRepository.CreateUser(userEntity);
+        }
+        
+        public async Task<ResponseModel> UpdateUser(UserDto user)
+        {
+            var userEntity = _mapper.Map<User>(user);
+            return await _unitOfWork.UserRepository.UpdateUser(userEntity);
         }
     }
 }

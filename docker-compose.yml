@@ -6,6 +6,6 @@ services:
     hostname: sqlsrv-api-laytaruma
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Password123456!"
+      MSSQL_SA_PASSWORD: "Messi-041027"
     ports:
       - "1433:1433"
