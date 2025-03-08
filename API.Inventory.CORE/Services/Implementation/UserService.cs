@@ -19,7 +19,9 @@ namespace API.Inventory.CORE.Services.Implementation
 
         public async Task<ResponseModel> GetAllUsers()
         {
-            return await _unitOfWork.UserRepository.GetAllUsers();
+            var users = await _unitOfWork.UserRepository.GetAllUsers();
+            var usersDto = _mapper.Map<List<UserDto>>(users.result);
+            return new ResponseModel { success = true, result = usersDto };
         }
         
         public async Task<ResponseModel> GetUserById(int userId)
