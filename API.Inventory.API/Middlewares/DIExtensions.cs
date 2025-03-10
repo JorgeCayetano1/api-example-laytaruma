@@ -13,8 +13,15 @@ namespace API.Inventory.API.Middlewares
     {
         public static void AddDependencyInjection(this IServiceCollection services)
         {
-            services.AddScoped<IUserInventoryService, UserInventoryInventoryService>();
-            services.AddScoped<IUserInventoryRepository, UserInventoryInventoryRepository>();
+            services.AddScoped<IUserInventoryService, UserInventoryService>();
+            services.AddScoped<IUserInventoryRepository, UserInventoryRepository>();
+            
+            services.AddScoped<IModuleInventoryService, ModuleInventoryService>();
+            services.AddScoped<IModuleInventoryRepository, ModuleInventoryRepository>();
+            
+            services.AddScoped<IRoleInventoryService, RoleInventoryService>();
+            services.AddScoped<IRoleInventoryRepository, RoleInventoryRepository>();
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbContext, DbContext>();
         }

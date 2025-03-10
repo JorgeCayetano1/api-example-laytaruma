@@ -9,11 +9,11 @@ namespace API.Inventory.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserInventoryController : ControllerBase
     {
         private readonly IUserInventoryService _userInventoryService;
 
-        public UserController(IUserInventoryService userInventoryService)
+        public UserInventoryController(IUserInventoryService userInventoryService)
         {
             _userInventoryService = userInventoryService;
         }

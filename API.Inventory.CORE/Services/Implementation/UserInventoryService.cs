@@ -6,12 +6,12 @@ using AutoMapper;
 
 namespace API.Inventory.CORE.Services.Implementation
 {
-    public class UserInventoryInventoryService : IUserInventoryService
+    public class UserInventoryService : IUserInventoryService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserInventoryInventoryService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserInventoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

@@ -7,12 +7,12 @@ using API.Inventory.CORE.Entities;
 
 namespace API.Inventory.CORE.Repositories.Implementation
 {
-    public class UserInventoryInventoryRepository : IUserInventoryRepository
+    public class UserInventoryRepository : IUserInventoryRepository
     {
        
         private readonly IDbContext _dbContext;
         
-        public UserInventoryInventoryRepository(IDbContext dbContext)
+        public UserInventoryRepository(IDbContext dbContext)
         {
             _dbContext = dbContext;
         }
