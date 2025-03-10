@@ -11,17 +11,17 @@ namespace API.Inventory.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserInventoryService _userInventoryService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserInventoryService userInventoryService)
         {
-            _userService = userService;
+            _userInventoryService = userInventoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var response = await _userService.GetAllUsers();
+            var response = await _userInventoryService.GetAllUsers();
             if (response.success)
             {
                 return Ok(response);
@@ -33,7 +33,7 @@ namespace API.Inventory.API.Controllers
         [Route("{userId:int}")]
         public async Task<IActionResult> GetUser(int userId)
         {
-            var response = await _userService.GetUserById(userId);
+            var response = await _userInventoryService.GetUserById(userId);
             if (response.success)
             {
                 return Ok(response);
@@ -42,9 +42,19 @@ namespace API.Inventory.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserDto user)
+        public async Task<IActionResult> CreateUser([FromBody] UserInventoryDto user)
         {
-            var response = await _userService.CreateUser(user);
+            var response = await _userInventoryService.CreateUser(user);
+            if (!response.success)
+                return BadRequest(response);
+            
+            return Ok(response);
+        }
+        
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UserInventoryDto user)
+        {
+            var response = await _userInventoryService.UpdateUser(user);
             if (response.success)
             {
                 return Ok(response);
@@ -52,10 +62,11 @@ namespace API.Inventory.API.Controllers
             return BadRequest(response);
         }
         
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDto user)
+        [HttpDelete]
+        [Route("{userId:int}")]
+        public async Task<IActionResult> DeleteUser(int userId)
         {
-            var response = await _userService.UpdateUser(user);
+            var response = await _userInventoryService.DeleteUser(userId);
             if (response.success)
             {
                 return Ok(response);

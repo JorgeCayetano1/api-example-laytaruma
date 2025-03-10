@@ -4,6 +4,6 @@ namespace API.Inventory.CORE
 {
     public interface IUnitOfWork
     {
-        IUserRepository UserRepository { get; }
+        IUserInventoryRepository UserInventoryRepository { get; }
     }
 }

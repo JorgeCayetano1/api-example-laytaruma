@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace API.Inventory.CORE.Models
 {
-    public class ResponseModel
+    public class ResponseModel<T>
     {
         public bool success { get; set; }
-        public object result { get; set; }
+        public T result { get; set; }
         public string Token { get; set; }
         public string RefreshToken { get; set; }
         public string errorMessage { get; set; }

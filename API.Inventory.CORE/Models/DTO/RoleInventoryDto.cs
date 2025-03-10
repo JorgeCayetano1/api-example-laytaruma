@@ -1,10 +1,10 @@
 namespace API.Inventory.CORE.Models.DTO;
 
-public class UserRoleDto
+public class RoleInventoryDto
 {
-    public int UserRoleId { get; set; }
-    public int UserInventoryId { get; set; }
     public int RoleInventoryId { get; set; }
+    public string RoleName { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public DateTime DeletedAt { get; set; }
 }

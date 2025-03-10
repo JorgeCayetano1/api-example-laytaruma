@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace API.Inventory.CORE.Models.DTO;
 
-namespace API.Inventory.CORE.Models.DTO
+public class StockDto
 {
-    class StockDto
-    {
-    }
+    public int StockId { get; set; }
+    public int ArticleId { get; set; }
+    public int LocationId { get; set; }
+    public int Quantity { get; set; }
+    public int MinStock { get; set; }
+    public int MaxStock { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

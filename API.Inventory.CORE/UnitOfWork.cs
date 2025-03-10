@@ -4,11 +4,11 @@ namespace API.Inventory.CORE
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public IUserRepository UserRepository { get; }
+        public IUserInventoryRepository UserInventoryRepository { get; }
 
-        public UnitOfWork(IUserRepository userRepository)
+        public UnitOfWork(IUserInventoryRepository userInventoryRepository)
         {
-            UserRepository = userRepository;
+            UserInventoryRepository = userInventoryRepository;
         }
     }
 }
