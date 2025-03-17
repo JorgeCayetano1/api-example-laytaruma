@@ -6,11 +6,11 @@ namespace API.Inventory.CORE.Repositories.Interface
 {
     public interface IUserInventoryRepository
     {
-        Task<ResponseModel<List<UserInventory>>> GetAllUsers();
-        Task<ResponseModel<UserInventory>> GetUser(int userId);
-        Task<ResponseModel<int>> CreateUser(UserInventory user);
-        Task<ResponseModel<int>> UpdateUser(UserInventory user);
-        Task<ResponseModel<int>> DeleteUser(int userId);
+        Task<List<UserInventory>> GetAllUsers();
+        Task<UserInventory?> GetUser(int userId);
+        Task<int> CreateUser(UserInventory user);
+        Task<int> UpdateUser(UserInventory user);
+        Task<int> DeleteUser(int userId);
 
     }
 }

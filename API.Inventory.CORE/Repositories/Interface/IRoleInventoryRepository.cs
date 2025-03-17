@@ -5,9 +5,9 @@ namespace API.Inventory.CORE.Repositories.Interface;
 
 public interface IRoleInventoryRepository
 {
-    Task<ResponseModel<List<RoleInventory>>> GetAllRoles();
-    Task<ResponseModel<RoleInventory>> GetRole(int roleId);
-    Task<ResponseModel<int>> CreateRole(RoleInventory role);
-    Task<ResponseModel<int>> UpdateRole(RoleInventory role);
-    Task<ResponseModel<int>> DeleteRole(int roleId);
+    Task<List<RoleInventory>> GetAllRoles();
+    Task<RoleInventory?> GetRole(int roleId);
+    Task<int> CreateRole(RoleInventory role);
+    Task<int> UpdateRole(RoleInventory role);
+    Task<int> DeleteRole(int roleId);
 }

@@ -16,22 +16,18 @@ public class RoleInventoryRepository : IRoleInventoryRepository
         _dbContext = dbContext;
     }
     
-    public async Task<ResponseModel<List<RoleInventory>>> GetAllRoles()
+    public async Task<List<RoleInventory>> GetAllRoles()
     {
-        var response = new ResponseModel<List<RoleInventory>>();
         var sql = "Inventory.GetRoles";
         
         var dataTableResponse = await _dbContext.QueryAsync(sql);
-        var roles = dataTableResponse.result.TableToList<RoleInventory>();
+        var roles = dataTableResponse.TableToList<RoleInventory>();
         
-        response.success = true;
-        response.result = roles;
-        return response;
+        return roles;
     }
 
-    public async Task<ResponseModel<RoleInventory>> GetRole(int roleId)
+    public async Task<RoleInventory?> GetRole(int roleId)
     {
-        var response = new ResponseModel<RoleInventory>();
         var sql = "Inventory.GetRoleById";
         
         var parameters = new[]
@@ -40,23 +36,12 @@ public class RoleInventoryRepository : IRoleInventoryRepository
         };
         
         var dataTableResult = await _dbContext.QueryAsync(sql, parameters);
-        var role = dataTableResult.result.TableToList<RoleInventory>().FirstOrDefault();
+        var role = dataTableResult.TableToList<RoleInventory>().FirstOrDefault();
         
-        if (role != null)
-        {
-            response.success = true;
-            response.result = role;
-        }
-        else
-        {
-            response.success = false;
-            response.errorMessage = "Role not found";
-        }
-        
-        return response;
+        return role;
     }
 
-    public async Task<ResponseModel<int>> CreateRole(RoleInventory role)
+    public async Task<int> CreateRole(RoleInventory role)
     {
         var sql = "Inventory.CreateRole";
         
@@ -70,7 +55,7 @@ public class RoleInventoryRepository : IRoleInventoryRepository
         return response;
     }
 
-    public async Task<ResponseModel<int>> UpdateRole(RoleInventory role)
+    public async Task<int> UpdateRole(RoleInventory role)
     {
         var sql = "Inventory.UpdateRole";
         
@@ -85,7 +70,7 @@ public class RoleInventoryRepository : IRoleInventoryRepository
         return response;
     }
 
-    public async Task<ResponseModel<int>> DeleteRole(int roleId)
+    public async Task<int> DeleteRole(int roleId)
     {
         var sql = "Inventory.DeleteRole";
         

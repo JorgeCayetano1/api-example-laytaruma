@@ -1,4 +1,5 @@
 ﻿using API.Inventory.CORE;
+using API.Inventory.CORE.Helpers;
 using API.Inventory.CORE.Repositories.Connection;
 using API.Inventory.CORE.Repositories.Implementation;
 using API.Inventory.CORE.Repositories.Interface;
@@ -24,6 +25,9 @@ namespace API.Inventory.API.Middlewares
             
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbContext, DbContext>();
+            
+            // Excel Service
+            services.AddScoped<ExcelService>();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using API.Inventory.CORE.Repositories.Interface;
+﻿using API.Inventory.CORE.Repositories.Connection;
+using API.Inventory.CORE.Repositories.Interface;
 
 namespace API.Inventory.CORE
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public IDbContext DbContext { get; }
         public IUserInventoryRepository UserInventoryRepository { get; }
         public IRoleInventoryRepository RoleInventoryRepository { get; }
         public IModuleInventoryRepository ModuleInventoryRepository { get; }
@@ -11,12 +13,14 @@ namespace API.Inventory.CORE
         public UnitOfWork(
             IUserInventoryRepository userInventoryRepository,
             IRoleInventoryRepository roleInventoryRepository,
-            IModuleInventoryRepository moduleInventoryRepository
+            IModuleInventoryRepository moduleInventoryRepository,
+            IDbContext dbContext
             )
         {
             UserInventoryRepository = userInventoryRepository;
             RoleInventoryRepository = roleInventoryRepository;
             ModuleInventoryRepository = moduleInventoryRepository;
+            DbContext = dbContext;
         }
     }
 }

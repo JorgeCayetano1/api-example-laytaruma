@@ -5,9 +5,9 @@ namespace API.Inventory.CORE.Repositories.Interface;
 
 public interface IModuleInventoryRepository
 {
-    Task<ResponseModel<List<ModuleInventory>>> GetAllModules();
-    Task<ResponseModel<ModuleInventory>> GetModule(int moduleId);
-    Task<ResponseModel<int>> CreateModule(ModuleInventory module);
-    Task<ResponseModel<int>> UpdateModule(ModuleInventory module);
-    Task<ResponseModel<int>> DeleteModule(int moduleId);
+    Task<List<ModuleInventory>> GetAllModules();
+    Task<ModuleInventory?> GetModule(int moduleId);
+    Task<int> CreateModule(ModuleInventory module);
+    Task<int> UpdateModule(ModuleInventory module);
+    Task<int> DeleteModule(int moduleId);
 }

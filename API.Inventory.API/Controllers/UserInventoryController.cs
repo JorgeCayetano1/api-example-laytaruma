@@ -40,7 +40,35 @@ namespace API.Inventory.API.Controllers
             }
             return BadRequest(response);
         }
+        
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportUsers()
+        {
+            var response = await _userInventoryService.ExportUsers();
+            if (!response.success) return BadRequest(response);
+            
+            return File(response.result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", response.successMessage);
+        }
 
+        [HttpPost("import-multiple")]
+        public async Task<IActionResult> ImportMultiple(List<IFormFile> files)
+        {
+            var fileStreams = new List<Stream>();
+            foreach (var file in files)
+            {
+                if (file.Length <= 0) continue;
+                
+                var stream = new MemoryStream();
+                await file.CopyToAsync(stream);
+                fileStreams.Add(stream);
+            }
+
+            var response = await _userInventoryService.ImportUsers(fileStreams);
+            if (!response.success) return BadRequest(response);
+            
+            return Ok(response);
+        }
+        
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserInventoryDto user)
         {

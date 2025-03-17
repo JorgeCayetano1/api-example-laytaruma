@@ -7,6 +7,8 @@ namespace API.Inventory.CORE.Services.Interface
     {
         Task<ResponseModel<List<UserInventoryDto>>> GetAllUsers();
         Task<ResponseModel<UserInventoryDto>> GetUserById(int userId);
+        Task<ResponseModel<MemoryStream>> ExportUsers();
+        Task<ResponseModel<MemoryStream>> ImportUsers(List<Stream> fileStreams);
         Task<ResponseModel<int>> CreateUser(UserInventoryDto user);
         Task<ResponseModel<int>> UpdateUser(UserInventoryDto user);
         Task<ResponseModel<int>> DeleteUser(int userId);

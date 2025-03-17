@@ -16,22 +16,18 @@ public class ModuleInventoryRepository : IModuleInventoryRepository
         _dbContext = dbContext;
     }
     
-    public async Task<ResponseModel<List<ModuleInventory>>> GetAllModules()
+    public async Task<List<ModuleInventory>> GetAllModules()
     {
-        var response = new ResponseModel<List<ModuleInventory>>();
         var sql = "Inventory.GetModules";
         
         var dataTableResponse = await _dbContext.QueryAsync(sql);
-        var modules = dataTableResponse.result.TableToList<ModuleInventory>();
+        var modules = dataTableResponse.TableToList<ModuleInventory>();
         
-        response.success = true;
-        response.result = modules;
-        return response;
+        return modules;
     }
 
-    public async Task<ResponseModel<ModuleInventory>> GetModule(int moduleId)
+    public async Task<ModuleInventory?> GetModule(int moduleId)
     {
-        var response = new ResponseModel<ModuleInventory>();
         var sql = "Inventory.GetModuleById";
         
         var parameters = new[]
@@ -40,33 +36,19 @@ public class ModuleInventoryRepository : IModuleInventoryRepository
         };
         
         var dataTableResult = await _dbContext.QueryAsync(sql, parameters);
-        var module = dataTableResult.result.TableToList<ModuleInventory>().FirstOrDefault();
+        var module = dataTableResult.TableToList<ModuleInventory>().FirstOrDefault();
         
-        if (module != null)
-        {
-            response.success = true;
-            response.result = module;
-        }
-        else
-        {
-            response.success = false;
-            response.errorMessage = "Module not found";
-        }
-        
-        return response;
+        return module;
     }
 
-    public async Task<ResponseModel<int>> CreateModule(ModuleInventory module)
+    public async Task<int> CreateModule(ModuleInventory module)
     {
         var sql = "Inventory.CreateModule";
         
         var parameters = new[]
         {
             new SqlParameter("@ModuleName", module.MODULE_NAME),
-            new SqlParameter("@ModuleDescription", module.MODULE_DESCRIPTION),
-            new SqlParameter("@CreatedAt", module.CREATED_AT),
-            new SqlParameter("@UpdatedAt", module.UPDATED_AT),
-            new SqlParameter("@DeletedAt", module.DELETED_AT)
+            new SqlParameter("@ModuleDescription", module.MODULE_DESCRIPTION)
         };
         
         var result = await _dbContext.ExecuteAsync(sql, parameters);
@@ -74,7 +56,7 @@ public class ModuleInventoryRepository : IModuleInventoryRepository
         return result;
     }
 
-    public async Task<ResponseModel<int>> UpdateModule(ModuleInventory module)
+    public async Task<int> UpdateModule(ModuleInventory module)
     {
         var sql = "Inventory.UpdateModule";
         
@@ -82,8 +64,7 @@ public class ModuleInventoryRepository : IModuleInventoryRepository
         {
             new SqlParameter("@ModuleId", module.MODULE_INVENTORY_ID),
             new SqlParameter("@ModuleName", module.MODULE_NAME),
-            new SqlParameter("@ModuleDescription", module.MODULE_DESCRIPTION),
-            new SqlParameter("@UpdatedAt", module.UPDATED_AT)
+            new SqlParameter("@ModuleDescription", module.MODULE_DESCRIPTION)
         };
         
         var result = await _dbContext.ExecuteAsync(sql, parameters);
@@ -91,7 +72,7 @@ public class ModuleInventoryRepository : IModuleInventoryRepository
         return result;
     }
 
-    public async Task<ResponseModel<int>> DeleteModule(int moduleId)
+    public async Task<int> DeleteModule(int moduleId)
     {
         var sql = "Inventory.DeleteModule";
         

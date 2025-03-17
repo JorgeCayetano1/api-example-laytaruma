@@ -17,20 +17,17 @@ namespace API.Inventory.CORE.Repositories.Implementation
             _dbContext = dbContext;
         }
         
-        public async Task<ResponseModel<List<UserInventory>>> GetAllUsers()
+        public async Task<List<UserInventory>> GetAllUsers()
         {
-            var response = new ResponseModel<List<UserInventory>>();
             var sql = "Inventory.GetUsers";
             
             var dataTableResponse = await _dbContext.QueryAsync(sql);
-            var users = dataTableResponse.result.TableToList<UserInventory>();
+            var users = dataTableResponse.TableToList<UserInventory>();
             
-            response.success = true;
-            response.result = users;
-            return response;
+            return users;
         }
         
-        public async Task<ResponseModel<UserInventory>> GetUser(int userId)
+        public async Task<UserInventory?> GetUser(int userId)
         {
             var response = new ResponseModel<UserInventory>();
             var sql = "Inventory.GetUserById";
@@ -41,23 +38,12 @@ namespace API.Inventory.CORE.Repositories.Implementation
             };
             
             var dataTableResult = await _dbContext.QueryAsync(sql, parameters);
-            var user = dataTableResult.result.TableToList<UserInventory>().FirstOrDefault();
+            var user = dataTableResult.TableToList<UserInventory>().FirstOrDefault();
             
-            if (user != null)
-            {
-                response.success = true;
-                response.result = user;
-            }
-            else
-            {
-                response.success = false;
-                response.errorMessage = "User not found";
-            }
-            
-            return response;
+            return user;
         }
         
-        public async Task<ResponseModel<int>> CreateUser(UserInventory user)
+        public async Task<int> CreateUser(UserInventory user)
         {
             var sql = "Inventory.CreateUser";
             
@@ -74,7 +60,7 @@ namespace API.Inventory.CORE.Repositories.Implementation
 
         }
         
-        public async Task<ResponseModel<int>> UpdateUser(UserInventory user)
+        public async Task<int> UpdateUser(UserInventory user)
         {
             var sql = "Inventory.UpdateUser";
             
@@ -90,7 +76,7 @@ namespace API.Inventory.CORE.Repositories.Implementation
             return response;
         }
         
-        public async Task<ResponseModel<int>> DeleteUser(int userId)
+        public async Task<int> DeleteUser(int userId)
         {
             var sql = "Inventory.DeleteUser";
             

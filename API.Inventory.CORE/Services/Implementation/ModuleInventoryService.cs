@@ -22,9 +22,9 @@ public class ModuleInventoryService : IModuleInventoryService
         var response = new ResponseModel<List<ModuleInventoryDto>>();
         var modules = await _unitOfWork.ModuleInventoryRepository.GetAllModules();
         
-        response.success = modules.success;
-        response.result = _mapper.Map<List<ModuleInventoryDto>>(modules.result);
-        response.errorMessage = modules.errorMessage;
+        response.result = _mapper.Map<List<ModuleInventoryDto>>(modules);
+        response.success = true;
+        response.successMessage = "Successfully retrieved modules";
         
         return response;
     }
@@ -34,9 +34,9 @@ public class ModuleInventoryService : IModuleInventoryService
         var response = new ResponseModel<ModuleInventoryDto>();
         var module = await _unitOfWork.ModuleInventoryRepository.GetModule(moduleId);
         
-        response.success = module.success;
-        response.result = _mapper.Map<ModuleInventoryDto>(module.result);
-        response.errorMessage = module.errorMessage;
+        response.result = _mapper.Map<ModuleInventoryDto>(module);
+        response.success = true;
+        response.successMessage = "Successfully retrieved module";
         
         return response;
     }
@@ -44,12 +44,23 @@ public class ModuleInventoryService : IModuleInventoryService
     public async Task<ResponseModel<int>> CreateModule(ModuleInventoryDto module)
     {
         var response = new ResponseModel<int>();
-        var moduleEntity = _mapper.Map<ModuleInventory>(module);
-        var result = await _unitOfWork.ModuleInventoryRepository.CreateModule(moduleEntity);
+        var moduleProfile = _mapper.Map<ModuleInventory>(module);
         
-        response.success = result.success;
-        response.result = result.result;
-        response.errorMessage = result.errorMessage;
+        await _unitOfWork.DbContext.BeginTransactionAsync();
+        
+        var result = await _unitOfWork.ModuleInventoryRepository.CreateModule(moduleProfile);
+        if (result == 0)
+        {
+            await _unitOfWork.DbContext.RollbackTransactionAsync();
+            response.success = false;
+            response.errorMessage = "Error creating module";
+            return response;
+        }
+        
+        await _unitOfWork.DbContext.CommitTransactionAsync();
+        response.success = true;
+        response.result = result;
+        response.successMessage = "Successfully created module";
         
         return response;
     }
@@ -57,12 +68,33 @@ public class ModuleInventoryService : IModuleInventoryService
     public async Task<ResponseModel<int>> UpdateModule(ModuleInventoryDto module)
     {
         var response = new ResponseModel<int>();
-        var moduleEntity = _mapper.Map<ModuleInventory>(module);
-        var result = await _unitOfWork.ModuleInventoryRepository.UpdateModule(moduleEntity);
+        var findModule = await _unitOfWork.ModuleInventoryRepository.GetModule(module.ModuleInventoryId);
+        if (findModule == null)
+        {
+            response.success = false;
+            response.errorMessage = "Module not found";
+            return response;
+        }
         
-        response.success = result.success;
-        response.result = result.result;
-        response.errorMessage = result.errorMessage;
+        var moduleProfile = _mapper.Map<ModuleInventory>(module);
+        
+        await _unitOfWork.DbContext.BeginTransactionAsync();
+        
+        var result = await _unitOfWork.ModuleInventoryRepository.UpdateModule(moduleProfile);
+
+        if (result == 0)
+        {
+            await _unitOfWork.DbContext.RollbackTransactionAsync();
+            response.success = false;
+            response.errorMessage = "Error updating module";
+            
+            return response;
+        }
+        
+        await _unitOfWork.DbContext.CommitTransactionAsync();
+        response.success = true;
+        response.result = result;
+        response.successMessage = "Successfully updated module";
         
         return response;
     }
@@ -70,12 +102,30 @@ public class ModuleInventoryService : IModuleInventoryService
     public async Task<ResponseModel<int>> DeleteModule(int moduleId)
     {
         var response = new ResponseModel<int>();
+        var findModule = await _unitOfWork.ModuleInventoryRepository.GetModule(moduleId);
+        if (findModule == null)
+        {
+            response.success = false;
+            response.errorMessage = "Module not found";
+            return response;
+        }
+        
+        await _unitOfWork.DbContext.BeginTransactionAsync();
+
         var result = await _unitOfWork.ModuleInventoryRepository.DeleteModule(moduleId);
+        if (result == 0)
+        {
+            await _unitOfWork.DbContext.RollbackTransactionAsync();
+            response.success = false;
+            response.errorMessage = "Error deleting module";
+            
+            return response;
+        }
         
-        response.success = result.success;
-        response.result = result.result;
-        response.errorMessage = result.errorMessage;
-        
+        await _unitOfWork.DbContext.CommitTransactionAsync();
+        response.success = true;
+        response.result = result;
+        response.successMessage = "Successfully deleted module";
         return response;
     }
 }
