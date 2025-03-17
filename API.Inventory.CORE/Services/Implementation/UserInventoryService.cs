@@ -11,13 +11,11 @@ namespace API.Inventory.CORE.Services.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ExcelService _excelService;
 
-        public UserInventoryService(IUnitOfWork unitOfWork, IMapper mapper, ExcelService excelService)
+        public UserInventoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _excelService = excelService;
         }
 
         public async Task<ResponseModel<List<UserInventoryDto>>> GetAllUsers()
@@ -51,7 +49,7 @@ namespace API.Inventory.CORE.Services.Implementation
             var users = await _unitOfWork.UserInventoryRepository.GetAllUsers();
             var usersDto = _mapper.Map<List<UserInventoryDto>>(users);
             
-            var result = _excelService.ExportExcel(usersDto, "Users");
+            var result = ExcelService.ExportExcel(usersDto, "Users");
             if (result == null)
             {
                 response.success = false;

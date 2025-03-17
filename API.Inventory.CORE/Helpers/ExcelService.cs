@@ -8,7 +8,8 @@ using NPOI.XSSF.UserModel;
 
 namespace API.Inventory.CORE.Helpers;
 
-public class ExcelService : IDisposable
+public class ExcelService 
+    // : IDisposable
 {
     private readonly XLWorkbook _workbook;
     
@@ -17,74 +18,80 @@ public class ExcelService : IDisposable
         _workbook = new XLWorkbook();
     }
     
-    public MemoryStream ExportExcel<T>(List<T> data, string sheetName)
+    public static MemoryStream ExportExcel<T>(List<T> data, string sheetName)
     {
         var stream = new MemoryStream();
         if (data.Count == 0) return stream;
 
-        var worksheet = _workbook.Worksheets.Add(sheetName);
-
-        // Create header
-        var properties = typeof(T).GetProperties();
-        for (var i = 0; i < properties.Length; i++)
+        using (var workbook = new XLWorkbook()) // <-- Crear nuevo Workbook
         {
-            worksheet.Cell(1, i + 1).Value = properties[i].Name;
-            worksheet.Cell(1, i + 1).Style.Font.Bold = true;
-        }
-
-        // Insert data and format cells
-        for (var i = 0; i < data.Count; i++)
-        {
-            for (var j = 0; j < properties.Length; j++)
+            var worksheet = workbook.Worksheets.Add(sheetName);
+        
+            var properties = typeof(T).GetProperties();
+            for (var i = 0; i < properties.Length; i++)
             {
-                var value = properties[j].GetValue(data[i]);
-                var cell = worksheet.Cell(i + 2, j + 1);
+                var cell = worksheet.Cell(1, i + 1);
+                cell.Value = properties[i].Name;
+                cell.Style.Font.Bold = true;
+            }
 
-                // Convert value to appropriate type
-                if (value is DateTime dateTimeValue)
+            for (var i = 0; i < data.Count; i++)
+            {
+                var row = i + 2;
+                var item = data[i];
+                for (var j = 0; j < properties.Length; j++)
                 {
-                    if (dateTimeValue == DateTime.MinValue) continue;
-                    cell.Value = dateTimeValue;
-                    cell.Style.DateFormat.Format = "yyyy-mm-dd";
-                }
-                else if (value is int intValue)
-                {
-                    cell.Value = intValue;
-                    cell.Style.NumberFormat.Format = "0";
-                }
-                else if (value is long longValue)
-                {
-                    cell.Value = longValue;
-                    cell.Style.NumberFormat.Format = "0";
-                }
-                else if (value is short shortValue)
-                {
-                    cell.Value = shortValue;
-                    cell.Style.NumberFormat.Format = "0";
-                }
-                else if (value is decimal decimalValue)
-                {
-                    cell.Value = decimalValue;
-                    cell.Style.NumberFormat.Format = "0.00";
-                }
-                else if (value is double doubleValue)
-                {
-                    cell.Value = doubleValue;
-                    cell.Style.NumberFormat.Format = "0.00";
-                }
-                else if (value is float floatValue)
-                {
-                    cell.Value = floatValue;
-                    cell.Style.NumberFormat.Format = "0.00";
-                }
-                else
-                {
-                    cell.Value = value?.ToString();
+                    var value = properties[j].GetValue(item);
+                    var cell = worksheet.Cell(row, j + 1);
+                
+                    // Convert value to appropriate type
+                    if (value is DateTime dateTimeValue)
+                    {
+                        if (dateTimeValue == DateTime.MinValue) continue;
+                        cell.Value = dateTimeValue;
+                        cell.Style.DateFormat.Format = "yyyy-mm-dd";
+                    }
+                    else if (value is int intValue)
+                    {
+                        cell.Value = intValue;
+                        cell.Style.NumberFormat.Format = "0";
+                    }
+                    else if (value is long longValue)
+                    {
+                        cell.Value = longValue;
+                        cell.Style.NumberFormat.Format = "0";
+                    }
+                    else if (value is short shortValue)
+                    {
+                        cell.Value = shortValue;
+                        cell.Style.NumberFormat.Format = "0";
+                    }
+                    else if (value is decimal decimalValue)
+                    {
+                        cell.Value = decimalValue;
+                        cell.Style.NumberFormat.Format = "0.00";
+                    }
+                    else if (value is double doubleValue)
+                    {
+                        cell.Value = doubleValue;
+                        cell.Style.NumberFormat.Format = "0.00";
+                    }
+                    else if (value is float floatValue)
+                    {
+                        cell.Value = floatValue;
+                        cell.Style.NumberFormat.Format = "0.00";
+                    }
+                    else
+                    {
+                        cell.Value = value?.ToString();
+                    }
                 }
             }
+
+            workbook.SaveAs(stream);
         }
 
-        _workbook.SaveAs(stream);
+        stream.Position = 0; // Asegurar que el stream está listo para ser leído
         return stream;
     }
     
@@ -215,8 +222,8 @@ public class ExcelService : IDisposable
         return result;
     }
     
-    public void Dispose()
-    {
-        _workbook.Dispose();
-    }
+    // public void Dispose()
+    // {
+    //     _workbook.Dispose();
+    // }
 }
